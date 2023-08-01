@@ -7,8 +7,21 @@ namespace PuzzleGame.Views
 {
     public partial class PuzzleGamePage : ContentPage
     {
+        public int GridSize
+        {
+            get { return piecesCount; }
+        }
+
+        public int MovesLimit
+        {
+            get { return currentLevel * 100; }
+        }
+
+        private int currentLevel = 1;
+        private int initialPiecesCount = 2;
+        private int piecesCount; // Variável que armazenará a quantidade atual de peças no tabuleiro
         private CancellationTokenSource cancellationTokenSource;
-        private int gridSize = 3; // Tamanho do tabuleiro de quebra-cabeça (3x3)
+        //private int gridSize { get; set; } // Tamanho do tabuleiro de quebra-cabeça
         private Button[,] puzzleButtons;
         private int movesCount = 0;
         private int timeInSeconds = 0;
@@ -29,10 +42,16 @@ namespace PuzzleGame.Views
             //StartTimer();
 
             InitializeGame();
+            StartTimer();
+            UpdateLabelMovesLimit();
         }
 
         private void InitializeGame()
         {
+            piecesCount = initialPiecesCount + currentLevel - 1; // Defina a quantidade de peças para o nível atual
+            //gridSize = (int)Math.Sqrt(piecesCount); // Tamanho do grid com base na quantidade de peças do nível atual
+            Console.WriteLine($"46 ---- GridSize{GridSize} ---- currentLevel{currentLevel} ---- initialPiecesCount{initialPiecesCount} ---- piecesCount{piecesCount}");
+
             // Inicialize o tabuleiro do quebra-cabeça
             InitializePuzzleBoard();
 
@@ -42,28 +61,30 @@ namespace PuzzleGame.Views
             // Inicialize o contador de movimentos e o cronômetro
             movesCount = 0;
             UpdateLabelMovimentos();
-            StartTimer();
+            //StartTimer();
 
             // Atualize a exibição do tabuleiro
-            UpdatePuzzleGrid();
+            //UpdatePuzzleGrid();
+
+            UpdateLabelNivel(); // Adicione este método para exibir o nível atual na tela
         }
 
         private void InitializePuzzleBoard()
         {
             // Crie o tabuleiro com os números embaralhados
             List<int> numbers = new List<int>();
-            for (int i = 0; i < gridSize * gridSize; i++)
+            for (int i = 0; i < GridSize * GridSize; i++)
             {
                 numbers.Add(i);
             }
             ShuffleList(numbers); // Embaralhar a lista usando o método personalizado
 
             // Preencha a matriz do tabuleiro com os números embaralhados
-            puzzleBoard = new int[gridSize, gridSize];
+            puzzleBoard = new int[GridSize, GridSize];
             int index = 0;
-            for (int i = 0; i < gridSize; i++)
+            for (int i = 0; i < GridSize; i++)
             {
-                for (int j = 0; j < gridSize; j++)
+                for (int j = 0; j < GridSize; j++)
                 {
                     puzzleBoard[i, j] = numbers[index];
                     index++;
@@ -74,46 +95,49 @@ namespace PuzzleGame.Views
         private void CreatePuzzleGrid()
         {
             // Crie a matriz de botões para representar as peças do quebra-cabeça
-            puzzleButtons = new Button[gridSize, gridSize];
+            puzzleButtons = new Button[GridSize, GridSize];
+            Console.WriteLine($"97 ---- GridSize{GridSize} ---- currentLevel{currentLevel} ---- initialPiecesCount{initialPiecesCount} ---- piecesCount{piecesCount}");
+
+            //puzzleGrid.Children.Clear();
 
             // Limpe as RowDefinitions e ColumnDefinitions existentes
             puzzleGrid.RowDefinitions.Clear();
             puzzleGrid.ColumnDefinitions.Clear();
 
-            // Defina as RowDefinitions
-            for (int i = 0; i < gridSize; i++)
+            for (int i = 0; i < GridSize; i++)
             {
                 puzzleGrid.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Star });
-            }
-
-            // Defina as ColumnDefinitions
-            for (int j = 0; j < gridSize; j++)
-            {
                 puzzleGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Star });
             }
 
-            for (int i = 0; i < gridSize; i++)
+            // Atualize os botões existentes no grid e crie novos botões se necessário
+            for (int i = 0; i < GridSize; i++)
             {
-                for (int j = 0; j < gridSize; j++)
+                for (int j = 0; j < GridSize; j++)
                 {
                     int pieceValue = puzzleBoard[i, j];
-                    Button button = new Button
-                    {
-                        Text = (pieceValue == 0) ? string.Empty : pieceValue.ToString(),
-                        FontSize = 24,
-                        HeightRequest = 80,
-                        WidthRequest = 80,
-                        //Command = new Command(() => MovePiece(i, j)),
-                    };
+                    Button button = puzzleButtons[i, j]; // Obtenha o botão existente do grid
 
-                    button.Clicked += (sender, e) =>
+                    if (button == null)
                     {
-                        int row = Grid.GetRow(button);
-                        int col = Grid.GetColumn(button);
-                        MovePiece(row, col);
-                    };
+                        button = new Button
+                        {
+                            FontSize = 24,
+                            HeightRequest = 70,
+                            WidthRequest = 70,
+                        };
 
-                    puzzleButtons[i, j] = button;
+                        button.Clicked += (sender, e) =>
+                        {
+                            int row = Grid.GetRow(button);
+                            int col = Grid.GetColumn(button);
+                            MovePiece(row, col);
+                        };
+
+                        puzzleButtons[i, j] = button;
+                    }
+
+                    button.Text = (pieceValue == 0) ? string.Empty : pieceValue.ToString();
                     puzzleGrid.Children.Add(button);
                     Grid.SetRow(button, i); // Define a linha do botão na Grid
                     Grid.SetColumn(button, j); // Define a coluna do botão na Grid
@@ -121,14 +145,14 @@ namespace PuzzleGame.Views
             }
         }
 
-        private void MovePiece(int row, int col)
+        private async void MovePiece(int row, int col)
         {
             // Encontre a posição da peça vazia (valor 0) no tabuleiro
             int emptyRow = -1;
             int emptyCol = -1;
-            for (int i = 0; i < gridSize; i++)
+            for (int i = 0; i < GridSize; i++)
             {
-                for (int j = 0; j < gridSize; j++)
+                for (int j = 0; j < GridSize; j++)
                 {
                     if (puzzleBoard[i, j] == 0)
                     {
@@ -147,9 +171,9 @@ namespace PuzzleGame.Views
                 puzzleBoard[row, col] = 0;
 
                 // Atualize a exibição dos botões na Grid com base no estado atual do tabuleiro
-                for (int i = 0; i < gridSize; i++)
+                for (int i = 0; i < GridSize; i++)
                 {
-                    for (int j = 0; j < gridSize; j++)
+                    for (int j = 0; j < GridSize; j++)
                     {
                         int pieceValue = puzzleBoard[i, j];
                         puzzleButtons[i, j].Text = (pieceValue == 0) ? string.Empty : pieceValue.ToString();
@@ -164,6 +188,18 @@ namespace PuzzleGame.Views
 
                 // Verifique se o jogo foi concluído após o movimento
                 CheckGameCompleted();
+
+                if (!isGameCompleted && movesCount >= MovesLimit)
+                {
+                    await DisplayAlert("Gamer Over", $"Você nao conseguiu concluir no limite de movimentos.", "OK");
+                    ResetTimer();
+                    currentLevel = 1;
+                    initialPiecesCount = 2;
+                    piecesCount = initialPiecesCount + currentLevel - 1;
+                    InitializeGame();
+                    StartTimer();
+                    UpdateLabelMovesLimit();
+                }
             }
         }
 
@@ -172,19 +208,11 @@ namespace PuzzleGame.Views
             movesLabel.Text = $"Movimentos: {movesCount}";
         }
 
-        private bool IsValidMove(int row, int col)
-        {
-            int emptyRow = FindEmptyPieceRow();
-            int emptyCol = FindEmptyPieceColumn();
-
-            return (row == emptyRow && Math.Abs(col - emptyCol) == 1) || (col == emptyCol && Math.Abs(row - emptyRow) == 1);
-        }
-
         private int FindEmptyPieceRow()
         {
-            for (int i = 0; i < gridSize; i++)
+            for (int i = 0; i < GridSize; i++)
             {
-                for (int j = 0; j < gridSize; j++)
+                for (int j = 0; j < GridSize; j++)
                 {
                     if (puzzleBoard[i, j] == 0)
                     {
@@ -197,9 +225,9 @@ namespace PuzzleGame.Views
 
         private int FindEmptyPieceColumn()
         {
-            for (int i = 0; i < gridSize; i++)
+            for (int i = 0; i < GridSize; i++)
             {
-                for (int j = 0; j < gridSize; j++)
+                for (int j = 0; j < GridSize; j++)
                 {
                     if (puzzleBoard[i, j] == 0)
                     {
@@ -213,9 +241,9 @@ namespace PuzzleGame.Views
         private void UpdatePuzzleGrid()
         {
             // Atualize a exibição do tabuleiro após cada movimento.
-            for (int i = 0; i < gridSize; i++)
+            for (int i = 0; i < GridSize; i++)
             {
-                for (int j = 0; j < gridSize; j++)
+                for (int j = 0; j < GridSize; j++)
                 {
                     int pieceValue = puzzleBoard[i, j];
                     puzzleButtons[i, j].Text = (pieceValue == 0) ? string.Empty : pieceValue.ToString();
@@ -227,17 +255,17 @@ namespace PuzzleGame.Views
             CheckGameCompleted();
         }
 
-        private void CheckGameCompleted()
+        private async void CheckGameCompleted()
         {
             bool isGameCompleted = true;
 
-            for (int i = 0; i < gridSize; i++)
+            for (int i = 0; i < GridSize; i++)
             {
-                for (int j = 0; j < gridSize; j++)
+                for (int j = 0; j < GridSize; j++)
                 {
                     int pieceValue = puzzleBoard[i, j];
                     // Verifique se todas as peças estão nas posições corretas, exceto a última peça (peça vazia)
-                    if (i == gridSize - 1 && j == gridSize - 1)
+                    if (i == GridSize - 1 && j == GridSize - 1)
                     {
                         if (pieceValue != 0)
                         {
@@ -245,7 +273,7 @@ namespace PuzzleGame.Views
                             break;
                         }
                     }
-                    else if (pieceValue != i * gridSize + j + 1)
+                    else if (pieceValue != i * GridSize + j + 1)
                     {
                         isGameCompleted = false;
                         break;
@@ -256,16 +284,20 @@ namespace PuzzleGame.Views
             if (isGameCompleted)
             {
                 StopTimer();
-                // Exiba uma mensagem para o jogador quando o quebra-cabeça for concluído
-                DisplayAlert("Parabéns!", "Você completou o quebra-cabeça!", "OK");
-                // Implemente a progressão de níveis ou qualquer ação desejada após a conclusão do jogo.
-            }
-        }
 
-        private void ShufflePuzzle()
-        {
-            // Implemente a lógica para embaralhar as peças do quebra-cabeça.
-            // ...
+                // O jogo foi concluído, exiba uma mensagem ao usuário
+                await DisplayAlert("Parabéns!", $"Você concluiu o nível {currentLevel} em {movesCount} movimentos.", "OK");
+
+                // Aumente o nível e a quantidade de peças para o próximo jogo
+                currentLevel++;
+                piecesCount = initialPiecesCount + currentLevel - 1; // Aumente a quantidade de peças para o próximo nível
+                //gridSize = (int)Math.Sqrt(piecesCount); // Defina o tamanho do grid com base na quantidade de peças
+                Console.WriteLine($"281 ---- GridSize{GridSize} ---- currentLevel{currentLevel} ---- initialPiecesCount{initialPiecesCount} ---- piecesCount{piecesCount}");
+                ResetTimer();
+                InitializeGame();
+                StartTimer();
+                UpdateLabelMovesLimit();
+            }
         }
 
         private void StartTimer()
@@ -280,10 +312,10 @@ namespace PuzzleGame.Views
                 {
                     await Task.Delay(1000, cancellationToken);
                     seconds++;
-                    Device.BeginInvokeOnMainThread(() =>
-                    {
-                        timeLabel.Text = $"Tempo: {TimeSpan.FromSeconds(seconds).ToString("g")}";
-                    });
+                    //Device.BeginInvokeOnMainThread(() =>
+                    //{
+                        //timeLabel.Text = $"Tempo: {TimeSpan.FromSeconds(seconds).ToString("g")}";
+                    //});
                 }
             }, cancellationToken);
         }
@@ -291,7 +323,7 @@ namespace PuzzleGame.Views
         private void ResetTimer()
         {
             cancellationTokenSource?.Cancel();
-            timeLabel.Text = "Tempo: 00:00:00";
+            //timeLabel.Text = "Tempo: 00:00:00";
         }
 
         private void StopTimer()
@@ -317,9 +349,30 @@ namespace PuzzleGame.Views
 
         private void RestartButton_Clicked(object sender, EventArgs e)
         {
-            ResetTimer();
+            //ResetTimer();
             InitializeGame();
         }
 
+        private void UpdateLabelNivel()
+        {
+            levelLabel.Text = $"Nível: {currentLevel}";
+        }
+
+        private void UpdateLabelMovesLimit()
+        {
+            movesLimit.Text = $"Limite de Movimentos: {MovesLimit}";
+        }
+
+        void TesteClick(Object sender, EventArgs e)
+        {
+            // Aumente o nível e a quantidade de peças para o próximo jogo
+            currentLevel++;
+            piecesCount = initialPiecesCount + currentLevel - 1; // Aumente a quantidade de peças para o próximo nível
+
+            ResetTimer();
+            InitializeGame();
+            StartTimer();
+            UpdateLabelMovesLimit();
+        }
     }
 }
