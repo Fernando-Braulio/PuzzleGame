@@ -14,7 +14,7 @@ namespace PuzzleGame.Views
 
         public int MovesLimit
         {
-            get { return currentLevel * 100; }
+            get { return currentLevel * 70; }
         }
 
         private int currentLevel = 1;
@@ -40,7 +40,7 @@ namespace PuzzleGame.Views
             InitializeComponent();
             //CreatePuzzleGrid();
             //StartTimer();
-
+            movesCount = 0;
             InitializeGame();
             StartTimer();
             UpdateLabelMovesLimit();
@@ -59,7 +59,7 @@ namespace PuzzleGame.Views
             CreatePuzzleGrid();
 
             // Inicialize o contador de movimentos e o cronômetro
-            movesCount = 0;
+            //movesCount = 0;
             UpdateLabelMovimentos();
             //StartTimer();
 
@@ -92,8 +92,39 @@ namespace PuzzleGame.Views
             }
         }
 
-        private void CreatePuzzleGrid()
+        private async void CreatePuzzleGrid()
         {
+            // Calcule o tamanho desejado dos botões com base na quantidade de peças no tabuleiro e no tamanho da tela
+            double buttonSize = CalculateButtonSize();
+
+            // Obtenha a largura e altura da tela em pixels
+            //var displayInfo = DeviceDisplay.MainDisplayInfo;
+            double screenWidth = puzzleGrid.Width;
+            double screenHeight = puzzleGrid.Height;
+
+            // Calcule a quantidade máxima de botões que podem caber horizontalmente e verticalmente na tela
+            int maxButtonsHorizontal = (int)(screenWidth / buttonSize);
+            int maxButtonsVertical = (int)(screenHeight / buttonSize);
+
+            // Determine o limite máximo de botões com base na quantidade máxima horizontal e verticalmente
+            int maxTotalButtons = maxButtonsHorizontal * maxButtonsVertical;
+
+            // Verifique se o número total de botões no tabuleiro excede o limite máximo
+            int currentTotalButtons = GridSize * GridSize;
+
+            if (maxTotalButtons != 0 && currentTotalButtons >= (maxTotalButtons - 5))
+            {
+                // Já excedeu o limite máximo de botões, não adicione mais botões
+                var ret = await DisplayAlert("FIMMM", $"Já exedeu o limite máximo de botoes para o tamanho da tela", "Reiniciar", "Calcelar");
+
+                if (ret)
+                {
+                    ResetGame();
+                }
+
+                return;
+            }
+
             // Crie a matriz de botões para representar as peças do quebra-cabeça
             puzzleButtons = new Button[GridSize, GridSize];
             Console.WriteLine($"97 ---- GridSize{GridSize} ---- currentLevel{currentLevel} ---- initialPiecesCount{initialPiecesCount} ---- piecesCount{piecesCount}");
@@ -109,9 +140,6 @@ namespace PuzzleGame.Views
                 puzzleGrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Star) });
                 puzzleGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
             }
-
-            // Calcule o tamanho desejado dos botões com base na quantidade de peças no tabuleiro e no tamanho da tela
-            double buttonSize = CalculateButtonSize();
 
             // Atualize os botões existentes no grid e crie novos botões se necessário
             for (int i = 0; i < GridSize; i++)
@@ -202,15 +230,21 @@ namespace PuzzleGame.Views
                 if (!isGameCompleted && movesCount >= MovesLimit)
                 {
                     await DisplayAlert("Gamer Over", $"Você nao conseguiu concluir no limite de movimentos.", "OK");
-                    ResetTimer();
-                    currentLevel = 1;
-                    initialPiecesCount = 2;
-                    piecesCount = initialPiecesCount + currentLevel - 1;
-                    InitializeGame();
-                    StartTimer();
-                    UpdateLabelMovesLimit();
+                    ResetGame();
                 }
             }
+        }
+
+        private void ResetGame()
+        {
+            ResetTimer();
+            currentLevel = 1;
+            initialPiecesCount = 2;
+            piecesCount = initialPiecesCount + currentLevel - 1;
+            movesCount = 0;
+            InitializeGame();
+            StartTimer();
+            UpdateLabelMovesLimit();
         }
 
         private void UpdateLabelMovimentos()
@@ -304,6 +338,7 @@ namespace PuzzleGame.Views
                 //gridSize = (int)Math.Sqrt(piecesCount); // Defina o tamanho do grid com base na quantidade de peças
                 Console.WriteLine($"281 ---- GridSize{GridSize} ---- currentLevel{currentLevel} ---- initialPiecesCount{initialPiecesCount} ---- piecesCount{piecesCount}");
                 ResetTimer();
+                movesCount = 0;
                 InitializeGame();
                 StartTimer();
                 UpdateLabelMovesLimit();
@@ -380,6 +415,7 @@ namespace PuzzleGame.Views
             piecesCount = initialPiecesCount + currentLevel - 1; // Aumente a quantidade de peças para o próximo nível
 
             ResetTimer();
+            movesCount = 0;
             InitializeGame();
             StartTimer();
             UpdateLabelMovesLimit();
