@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PuzzleGame.Views.OnboardingPage"
+             xmlns:vm="clr-namespace:PuzzleGame.ViewModel"
+             xmlns:models="clr-namespace:PuzzleGame.Models">
+
+    <ContentPage.BindingContext>
+        <vm:OnboardingViewModel/>
+    </ContentPage.BindingContext>
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Color x:Key="Primary">#355e22</Color>
+            <Color x:Key="Secondary">#6ABD45</Color>
+            <Color x:Key="Tertiary">#15250d</Color>
+            <Style TargetType="Label">
+                <Setter Property="TextColor" Value="{StaticResource Tertiary}" />
+                <Setter Property="HorizontalTextAlignment" Value="Center" />
+                <Setter Property="HorizontalOptions" Value="Center" />
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="70"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <CarouselView x:Name="onBoardingCarousel" IndicatorView="IndicatorView"
+                      Grid.Row="0" Grid.ColumnSpan="3" Grid.RowSpan="3"
+                      ItemsSource="{Binding Items}"
+                      Position="{Binding Position}">
+            <CarouselView.ItemTemplate>
+                <DataTemplate x:DataType="models:Onboarding">
+                    <ContentView>
+                        <FlexLayout Direction="Column" JustifyContent="SpaceEvenly">
+                            <!--<Image Grid.Row="0" Source="{Binding ImageUrl}"
+                                   Aspect="AspectFill" WidthRequest="100"
+                                   FlexLayout.AlignSelf="Center"/>-->
+
+                            <Label Text="{Binding Title}" IsVisible="{Binding NotTitle}"
+                                   TextColor="{StaticResource Tertiary}"
+                                   FontAttributes="Bold"
+                                   FontSize="Title" />
+
+                            <Label Text="{Binding Content}"
+                                   TextColor="{StaticResource Tertiary}"
+                                   FontSize="Body"/>
+
+                        </FlexLayout>
+                    </ContentView>
+                </DataTemplate>
+            </CarouselView.ItemTemplate>
+        </CarouselView>
+        <IndicatorView x:Name="IndicatorView"
+                       Grid.Row="3"
+                       Grid.Column="1"
+                       IndicatorSize="7"
+                       IndicatorsShape="Circle"
+                       IndicatorColor="{StaticResource Primary}"
+                       SelectedIndicatorColor="DarkGray"
+                       HorizontalOptions="Center"
+                       VerticalOptions="Center">
+        </IndicatorView>
+
+        <Button Grid.Row="3"
+                Grid.Column="0"
+                FontSize="Medium"
+                FontAttributes="Bold"
+                BackgroundColor="Transparent"
+                TextColor="{StaticResource Primary}"
+                Text="{Binding SkipButtonText}"
+                Command="{Binding SkipCommand}"/>
+
+        <Button Grid.Row="3" 
+                Grid.Column="2"
+                FontSize="Medium"
+                CornerRadius="30"
+                HeightRequest="60"
+                FontAttributes="Bold"
+                BackgroundColor="{StaticResource Primary}"
+                TextColor="White"
+                Text="{Binding NextButtonText}"
+                Command="{Binding NextCommand}"/>
+    </Grid>
+</ContentPage>

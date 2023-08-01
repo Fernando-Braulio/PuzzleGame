@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PuzzleGame.Views.PuzzleGamePage"
-             Title="Number Puzzle Game">
+             Title="Desafio Numérico">
     <ContentPage.Content>
         <StackLayout Padding="10">
             <Label x:Name="levelLabel" Text="Nível: 1" FontSize="18" HorizontalOptions="CenterAndExpand" />

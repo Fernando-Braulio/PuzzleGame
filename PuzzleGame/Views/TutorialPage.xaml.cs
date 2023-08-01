@@ -5,11 +5,11 @@
         public TutorialPage()
         {
             InitializeComponent();
+            NavigationPage.SetHasNavigationBar(this, false);
         }
 
         private void OnNextPageClicked(object sender, EventArgs e)
         {
-            // Adicione a página PuzzleGamePage como a página principal usando a navegação do NavigationPage
             Application.Current.MainPage = new NavigationPage(new PuzzleGamePage());
         }
     }

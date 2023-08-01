@@ -1,8 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="PuzzleGame.Views.TutorialPage"
-             Title="TutorialPage">
+             x:Class="PuzzleGame.Views.TutorialPage">
     <StackLayout Padding="20">
         <Label Text="Bem-vindo ao Jogo de Quebra-Cabeça!" FontSize="24" FontAttributes="Bold" />
         <Label Text="Instruções:" FontSize="18" FontAttributes="Bold" Margin="0,20,0,10" />
@@ -12,6 +11,6 @@
         <Label Text="4. Quando todas as peças estiverem em ordem, você completou o nível!" />
         <Label Text="5. Você pode aumentar o nível para desafiar-se ainda mais." Margin="0,20,0,0" />
 
-        <Button Text="Continuar" Clicked="OnNextPageClicked" Margin="0,40,0,0" />
+        <Button Text="Iniciar" Clicked="OnNextPageClicked" Margin="0,40,0,0" />
     </StackLayout>
 </ContentPage>
