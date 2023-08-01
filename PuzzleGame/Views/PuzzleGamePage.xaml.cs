@@ -7,6 +7,7 @@ namespace PuzzleGame.Views
 {
     public partial class PuzzleGamePage : ContentPage
     {
+        private CancellationTokenSource cancellationTokenSource;
         private int gridSize = 3; // Tamanho do tabuleiro de quebra-cabeça (3x3)
         private Button[,] puzzleButtons;
         private int movesCount = 0;
@@ -269,22 +270,35 @@ namespace PuzzleGame.Views
 
         private void StartTimer()
         {
-            stopwatch.Start();
-            timer = new Timer(UpdateTimeLabel, null, 0, 1000); // Atualize o tempo a cada 1 segundo
+            cancellationTokenSource = new CancellationTokenSource();
+            CancellationToken cancellationToken = cancellationTokenSource.Token;
+
+            Task.Run(async () =>
+            {
+                int seconds = 0;
+                while (true)
+                {
+                    await Task.Delay(1000, cancellationToken);
+                    seconds++;
+                    Device.BeginInvokeOnMainThread(() =>
+                    {
+                        timeLabel.Text = $"Tempo: {TimeSpan.FromSeconds(seconds).ToString("g")}";
+                    });
+                }
+            }, cancellationToken);
+        }
+
+        private void ResetTimer()
+        {
+            cancellationTokenSource?.Cancel();
+            timeLabel.Text = "Tempo: 00:00:00";
         }
 
         private void StopTimer()
         {
-            stopwatch.Stop();
-            timer?.Dispose();
-        }
-
-        private void UpdateTimeLabel(object? state)
-        {
-            timeInSeconds = (int)stopwatch.Elapsed.TotalSeconds;
-#pragma warning disable CS0612 // Type or member is obsolete
-            Device.InvokeOnMainThreadAsync(() => timeLabel.Text = $"Tempo: {timeInSeconds} segundos");
-#pragma warning restore CS0612 // Type or member is obsolete
+            cancellationTokenSource?.Cancel();
+            //stopwatch.Stop();
+            //timer?.Dispose();
         }
 
         private void ShuffleList<T>(List<T> list)
@@ -303,8 +317,8 @@ namespace PuzzleGame.Views
 
         private void RestartButton_Clicked(object sender, EventArgs e)
         {
+            ResetTimer();
             InitializeGame();
-            //ResetTimer();
         }
 
     }
