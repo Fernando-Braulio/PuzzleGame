@@ -98,7 +98,7 @@ namespace PuzzleGame.Views
             puzzleButtons = new Button[GridSize, GridSize];
             Console.WriteLine($"97 ---- GridSize{GridSize} ---- currentLevel{currentLevel} ---- initialPiecesCount{initialPiecesCount} ---- piecesCount{piecesCount}");
 
-            //puzzleGrid.Children.Clear();
+            puzzleGrid.Children.Clear();
 
             // Limpe as RowDefinitions e ColumnDefinitions existentes
             puzzleGrid.RowDefinitions.Clear();
@@ -106,9 +106,12 @@ namespace PuzzleGame.Views
 
             for (int i = 0; i < GridSize; i++)
             {
-                puzzleGrid.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Star });
-                puzzleGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = GridLength.Star });
+                puzzleGrid.RowDefinitions.Add(new RowDefinition() { Height = new GridLength(1, GridUnitType.Star) });
+                puzzleGrid.ColumnDefinitions.Add(new ColumnDefinition() { Width = new GridLength(1, GridUnitType.Star) });
             }
+
+            // Calcule o tamanho desejado dos botões com base na quantidade de peças no tabuleiro e no tamanho da tela
+            double buttonSize = CalculateButtonSize();
 
             // Atualize os botões existentes no grid e crie novos botões se necessário
             for (int i = 0; i < GridSize; i++)
@@ -123,8 +126,8 @@ namespace PuzzleGame.Views
                         button = new Button
                         {
                             FontSize = 24,
-                            HeightRequest = 70,
-                            WidthRequest = 70,
+                            HeightRequest = buttonSize,
+                            WidthRequest = buttonSize,
                         };
 
                         button.Clicked += (sender, e) =>
@@ -136,8 +139,15 @@ namespace PuzzleGame.Views
 
                         puzzleButtons[i, j] = button;
                     }
+                    else
+                    {
+                        // Atualize o tamanho do botão existente
+                        button.HeightRequest = buttonSize;
+                        button.WidthRequest = buttonSize;
+                    }
 
                     button.Text = (pieceValue == 0) ? string.Empty : pieceValue.ToString();
+                    puzzleButtons[i, j] = button;
                     puzzleGrid.Children.Add(button);
                     Grid.SetRow(button, i); // Define a linha do botão na Grid
                     Grid.SetColumn(button, j); // Define a coluna do botão na Grid
@@ -374,5 +384,28 @@ namespace PuzzleGame.Views
             StartTimer();
             UpdateLabelMovesLimit();
         }
+
+        private double CalculateButtonSize()
+        {
+            // Obtenha o tamanho da tela em pixels
+            double screenWidth = DeviceDisplay.MainDisplayInfo.Width;
+            double screenHeight = DeviceDisplay.MainDisplayInfo.Height;
+
+            // Calcule o tamanho máximo desejado do botão com base na quantidade de células no tabuleiro
+            int totalCells = GridSize * GridSize;
+            double maxButtonSize = Math.Min(screenWidth, screenHeight) / (GridSize + 1); // Divida por (GridSize + 1) para evitar que os botões se sobreponham
+
+            // Defina o tamanho do botão proporcionalmente ao nível atual
+            double buttonSize = maxButtonSize * (1.0 - currentLevel * 0.1); // Diminua 10% do tamanho do botão para cada nível
+
+            // Defina um limite superior para o tamanho do botão (por exemplo, 25% do tamanho da célula)
+            double maxButtonSizeLimit = maxButtonSize * 0.25;
+            buttonSize = Math.Min(buttonSize, maxButtonSizeLimit);
+
+            // Certifique-se de que o tamanho do botão não ultrapasse um tamanho mínimo desejado
+            double minButtonSize = 50;
+            return Math.Max(buttonSize, minButtonSize);
+        }
+
     }
 }

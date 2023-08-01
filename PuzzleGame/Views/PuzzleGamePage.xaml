@@ -4,7 +4,7 @@
              x:Class="PuzzleGame.Views.PuzzleGamePage"
              Title="PuzzleGamePage">
     <ContentPage.Content>
-        <StackLayout Padding="20">
+        <StackLayout Padding="10">
             <Label x:Name="levelLabel" Text="Nível: 1" FontSize="18" HorizontalOptions="CenterAndExpand" />
             <Label x:Name="movesLabel" Text="Movimentos: 0" FontSize="18" HorizontalOptions="CenterAndExpand" />
             <Label x:Name="movesLimit" Text="Limite de Movimentos: 0" FontSize="18" HorizontalOptions="CenterAndExpand" />
