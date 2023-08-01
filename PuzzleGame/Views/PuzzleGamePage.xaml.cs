@@ -17,6 +17,7 @@ namespace PuzzleGame.Views
             get { return currentLevel * 70; }
         }
 
+        double fontScaleFactor = 0.3;
         private int currentLevel = 1;
         private int initialPiecesCount = 2;
         private int piecesCount; // Variável que armazenará a quantidade atual de peças no tabuleiro
@@ -28,12 +29,7 @@ namespace PuzzleGame.Views
         private bool isGameCompleted = false;
         private Stopwatch stopwatch = new Stopwatch();
         private Timer timer;
-        private int[,] puzzleBoard = new int[,]
-            {
-            { 1, 2, 3 },
-            { 4, 5, 6 },
-            { 7, 8, 0 }, // O valor 0 representa o espaço vazio onde as peças podem ser movidas
-            };
+        private int[,] puzzleBoard;
 
         public PuzzleGamePage()
         {
@@ -51,6 +47,8 @@ namespace PuzzleGame.Views
             piecesCount = initialPiecesCount + currentLevel - 1; // Defina a quantidade de peças para o nível atual
             //gridSize = (int)Math.Sqrt(piecesCount); // Tamanho do grid com base na quantidade de peças do nível atual
             Console.WriteLine($"46 ---- GridSize{GridSize} ---- currentLevel{currentLevel} ---- initialPiecesCount{initialPiecesCount} ---- piecesCount{piecesCount}");
+
+            puzzleBoard = new int[GridSize, GridSize];
 
             // Inicialize o tabuleiro do quebra-cabeça
             InitializePuzzleBoard();
@@ -71,16 +69,26 @@ namespace PuzzleGame.Views
 
         private void InitializePuzzleBoard()
         {
-            // Crie o tabuleiro com os números embaralhados
-            List<int> numbers = new List<int>();
-            for (int i = 0; i < GridSize * GridSize; i++)
+            // Determine o número total de botões disponíveis no tabuleiro
+            int totalButtons = GridSize * GridSize;
+
+            // Crie uma lista de números de 1 até o total de botões disponíveis
+            List<int> numbers = Enumerable.Range(1, totalButtons - 1).ToList();
+            numbers.Add(0); // Adicione o valor 0 (espaço vazio) à lista
+
+            // Embaralhe a lista usando o algoritmo de Fisher-Yates
+            Random random = new Random();
+            int n = numbers.Count;
+            while (n > 1)
             {
-                numbers.Add(i);
+                n--;
+                int k = random.Next(n + 1);
+                int value = numbers[k];
+                numbers[k] = numbers[n];
+                numbers[n] = value;
             }
-            ShuffleList(numbers); // Embaralhar a lista usando o método personalizado
 
             // Preencha a matriz do tabuleiro com os números embaralhados
-            puzzleBoard = new int[GridSize, GridSize];
             int index = 0;
             for (int i = 0; i < GridSize; i++)
             {
@@ -153,7 +161,7 @@ namespace PuzzleGame.Views
                     {
                         button = new Button
                         {
-                            FontSize = 24,
+                            FontSize = buttonSize * fontScaleFactor,
                             HeightRequest = buttonSize,
                             WidthRequest = buttonSize,
                         };
@@ -172,6 +180,7 @@ namespace PuzzleGame.Views
                         // Atualize o tamanho do botão existente
                         button.HeightRequest = buttonSize;
                         button.WidthRequest = buttonSize;
+                        button.FontSize = buttonSize * fontScaleFactor;
                     }
 
                     button.Text = (pieceValue == 0) ? string.Empty : pieceValue.ToString();
@@ -443,5 +452,32 @@ namespace PuzzleGame.Views
             return Math.Max(buttonSize, minButtonSize);
         }
 
+        // Evento de clique do botão "Embaralhar"
+        private void ShuffleButton_Clicked(object sender, EventArgs e)
+        {
+            ShufflePuzzle(); // Chame o método para embaralhar os números do quebra-cabeça
+            UpdatePuzzleGrid(); // Atualize a exibição do quebra-cabeça na tela
+        }
+
+        // Método para embaralhar os números do quebra-cabeça
+        private void ShufflePuzzle()
+        {
+            List<int> numbers = new List<int>();
+            for (int i = 0; i < GridSize * GridSize; i++)
+            {
+                numbers.Add(i);
+            }
+            ShuffleList(numbers);
+
+            int index = 0;
+            for (int i = 0; i < GridSize; i++)
+            {
+                for (int j = 0; j < GridSize; j++)
+                {
+                    puzzleBoard[i, j] = numbers[index];
+                    index++;
+                }
+            }
+        }
     }
 }

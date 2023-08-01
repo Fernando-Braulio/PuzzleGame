@@ -12,8 +12,8 @@
             <Grid x:Name="puzzleGrid" Margin="10" RowSpacing="2" ColumnSpacing="2" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
                 <!-- Os botões representando as peças do quebra-cabeça serão adicionados aqui dinamicamente -->
             </Grid>
-            <Button Text="Embaralhar" Clicked="RestartButton_Clicked" />
-            <Button Text="Teste" Clicked="TesteClick" />
+            <Button Text="Embaralhar" Clicked="ShuffleButton_Clicked" />
+            <!--<Button Text="Teste" Clicked="TesteClick" />-->
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

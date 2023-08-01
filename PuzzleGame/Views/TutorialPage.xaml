@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="PuzzleGame.Views.TutorialPage"
+             Title="TutorialPage">
+    <StackLayout Padding="20">
+        <Label Text="Bem-vindo ao Jogo de Quebra-Cabeça!" FontSize="24" FontAttributes="Bold" />
+        <Label Text="Instruções:" FontSize="18" FontAttributes="Bold" Margin="0,20,0,10" />
+        <Label Text="1. Movimente as peças do quebra-cabeça para reorganizá-las em ordem crescente." />
+        <Label Text="2. O objetivo é colocar as peças em ordem crescente, deixando o espaço vazio no último lugar." />
+        <Label Text="3. Clique nos botões adjacentes ao espaço vazio para movimentar as peças." />
+        <Label Text="4. Quando todas as peças estiverem em ordem, você completou o nível!" />
+        <Label Text="5. Você pode aumentar o nível para desafiar-se ainda mais." Margin="0,20,0,0" />
+
+        <Button Text="Continuar" Clicked="OnNextPageClicked" Margin="0,40,0,0" />
+    </StackLayout>
+</ContentPage>
