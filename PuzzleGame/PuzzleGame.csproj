@@ -13,14 +13,15 @@
 		<NullableContextOptions>enable</NullableContextOptions>
 
 		<!-- Display name -->
-		<ApplicationTitle>PuzzleGame</ApplicationTitle>
+		<ApplicationTitle>Desafio Numérico</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.puzzlegame</ApplicationId>
+		<!-- <ApplicationId>com.companyname.puzzlegame</ApplicationId> -->
+		<ApplicationId>com.fernandobraulio.desafionumerico</ApplicationId>
 		<ApplicationIdGuid>de0afaaa-da7f-42d7-82be-d0d211aa3d68</ApplicationIdGuid>
 
 		<!-- Versions -->
-		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+		<ApplicationDisplayVersion>1.0.1</ApplicationDisplayVersion>
 		<ApplicationVersion>1</ApplicationVersion>
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
@@ -36,10 +37,10 @@
 	</PropertyGroup>
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#355e22" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#355e22" BaseSize="128,128" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
@@ -54,13 +55,9 @@
 
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
+		<PackageReference Include="FFImageLoadingCompat.Svg.Maui" Version="0.1.1" />
 	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="Views\" />
-	  <None Remove="Models\" />
-	  <None Remove="ViewModel\" />
-	</ItemGroup>
+	
 	<ItemGroup>
 	  <Folder Include="Views\" />
 	  <Folder Include="Models\" />

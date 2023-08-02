@@ -16,7 +16,8 @@ public partial class App : Application
 		InitializeComponent();
         LoadGameState();
 
-        MainPage = new NavigationPage(new PuzzleGamePage());
+        //MainPage = new NavigationPage(new PuzzleGamePage());
+        MainPage = new AppShell();
     }
 
     protected override void OnStart()

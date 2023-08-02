@@ -80,21 +80,22 @@ namespace PuzzleGame.ViewModel
                 {
                     Title = "Bem-vindo",
                     Content = "Movimente as peças do quebra-cabeça para reorganizá-las em ordem crescente. \n O objetivo é colocar as peças em ordem crescente, deixando o espaço vazio no último lugar.",
-                    ImageUrl = ""
+                    ImageUrl = "planilha.svg"
                 },
                 new Onboarding
                 {
                     Title = "",
                     Content = "Clique nos botões adjacentes ao espaço vazio para movimentar as peças. \n Quando todas as peças estiverem em ordem, você completou o nível!",
                     ImageUrl = "",
-                    NotTitle = false
+                    NotTitle = false,
+                    NotImage = false,
                 },
                 new Onboarding
                 {
                     Title = "",
                     Content = "Você pode aumentar o nível para desafiar-se ainda mais.",
-                    ImageUrl = "",
-                    NotTitle = false
+                    ImageUrl = "teste.svg",
+                    NotTitle = false,
                 }
             };
         }

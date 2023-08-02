@@ -3,16 +3,23 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="PuzzleGame.Views.PuzzleGamePage"
              Title="Desafio Numérico">
+    <!--<ContentPage.ToolbarItems>
+        <ToolbarItem IconImageSource="menu.png" Clicked="OnMenuClicked"/>
+    </ContentPage.ToolbarItems>-->
+
     <ContentPage.Content>
         <StackLayout Padding="10">
-            <Label x:Name="levelLabel" Text="Nível: 1" FontSize="18" HorizontalOptions="CenterAndExpand" />
-            <Label x:Name="movesLabel" Text="Movimentos: 0" FontSize="18" HorizontalOptions="CenterAndExpand" />
-            <Label x:Name="movesLimit" Text="Limite de Movimentos: 0" FontSize="18" HorizontalOptions="CenterAndExpand" />
+            <FlexLayout HorizontalOptions="FillAndExpand" JustifyContent="SpaceBetween" Direction="Row">
+                <Label x:Name="levelLabel" Text="Nível: 1" FontSize="18" HorizontalOptions="StartAndExpand" />
+                <Label x:Name="movesLabel" Text="Movimentos: 0" FontSize="18" HorizontalOptions="EndAndExpand" />
+            </FlexLayout>
+            
+            <Label x:Name="movesLimit" Text="Limite de Movimentos: 0" FontSize="18" HorizontalOptions="Start" />
             <!--<Label x:Name="timeLabel" Text="Tempo: 0 segundos" FontSize="Large" HorizontalOptions="Center" />-->
-            <Grid x:Name="puzzleGrid" Margin="10" RowSpacing="2" ColumnSpacing="2" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+            <Grid x:Name="puzzleGrid" Margin="0, 8" RowSpacing="2" ColumnSpacing="2" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
                 <!-- Os botões representando as peças do quebra-cabeça serão adicionados aqui dinamicamente -->
             </Grid>
-            <Button Text="Embaralhar" Clicked="ShuffleButton_Clicked" />
+            <Button Text="Embaralhar" Clicked="ShuffleButton_Clicked" VerticalOptions="End" />
             <!--<Button Text="Teste" Clicked="TesteClick" />-->
         </StackLayout>
     </ContentPage.Content>

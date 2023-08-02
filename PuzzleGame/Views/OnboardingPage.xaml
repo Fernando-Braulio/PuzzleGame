@@ -1,9 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="PuzzleGame.Views.OnboardingPage"
+             x:Class="PuzzleGame.Views.OnboardingPage"     
              xmlns:vm="clr-namespace:PuzzleGame.ViewModel"
              xmlns:models="clr-namespace:PuzzleGame.Models">
+
+    <!--xmlns:ffimageloading="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Compat.Maui"
+             xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Compat.Transformations"
+             xmlns:svg="clr-namespace:FFImageLoading.Svg.Maui;assembly=FFImageLoading.Compat.Svg.Maui"
+             xmlns:skia="clr-namespace:SkiaSharp.Extended.UI.Controls;assembly=SkiaSharp.Extended.UI"-->
 
     <ContentPage.BindingContext>
         <vm:OnboardingViewModel/>
@@ -25,7 +30,6 @@
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
-            <RowDefinition Height="*"/>
             <RowDefinition Height="70"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -35,33 +39,52 @@
         </Grid.ColumnDefinitions>
 
         <CarouselView x:Name="onBoardingCarousel" IndicatorView="IndicatorView"
-                      Grid.Row="0" Grid.ColumnSpan="3" Grid.RowSpan="3"
+                      Grid.Row="0" Grid.ColumnSpan="3"
                       ItemsSource="{Binding Items}"
                       Position="{Binding Position}">
             <CarouselView.ItemTemplate>
                 <DataTemplate x:DataType="models:Onboarding">
                     <ContentView>
-                        <FlexLayout Direction="Column" JustifyContent="SpaceEvenly">
-                            <!--<Image Grid.Row="0" Source="{Binding ImageUrl}"
+                        <FlexLayout Direction="Column" AlignContent="SpaceEvenly" VerticalOptions="CenterAndExpand">
+                            <!--<Image Grid.Row="0" Source="planilha"
                                    Aspect="AspectFill" WidthRequest="100"
                                    FlexLayout.AlignSelf="Center"/>-->
-
                             <Label Text="{Binding Title}" IsVisible="{Binding NotTitle}"
                                    TextColor="{StaticResource Tertiary}"
                                    FontAttributes="Bold"
                                    FontSize="Title" />
 
+                            <!--<svg:SvgCachedImage HeightRequest="200"
+                                Source="https://egestor.com.br/assets/img/v-sistema-planilhas.svg"
+                                FlexLayout.AlignSelf="Center"/>-->
+
+                            <!--<skia:SKLottieView
+                                  Source="biker-animation.json"
+                                  RepeatCount="-1"
+                                  HeightRequest="200"
+                                  WidthRequest="200"
+                                  FlexLayout.AlignSelf="Center" />-->
+
+
+                            <!--converter-https://anyconv.com/pt/conversor-de-svg-para-gif/-->
+
+                            <WebView Source="{Binding ImageUrl}" IsVisible="{Binding NotImage}"
+                                     HeightRequest="300" WidthRequest="300"
+                                     FlexLayout.AlignSelf="Center"/>
+
                             <Label Text="{Binding Content}"
                                    TextColor="{StaticResource Tertiary}"
+                                   FlexLayout.AlignSelf="End"
+                                   VerticalOptions="End"
+                                   VerticalTextAlignment="End"
                                    FontSize="Body"/>
-
                         </FlexLayout>
                     </ContentView>
                 </DataTemplate>
             </CarouselView.ItemTemplate>
         </CarouselView>
         <IndicatorView x:Name="IndicatorView"
-                       Grid.Row="3"
+                       Grid.Row="1"
                        Grid.Column="1"
                        IndicatorSize="7"
                        IndicatorsShape="Circle"
@@ -71,7 +94,7 @@
                        VerticalOptions="Center">
         </IndicatorView>
 
-        <Button Grid.Row="3"
+        <Button Grid.Row="1"
                 Grid.Column="0"
                 FontSize="Medium"
                 FontAttributes="Bold"
@@ -80,7 +103,7 @@
                 Text="{Binding SkipButtonText}"
                 Command="{Binding SkipCommand}"/>
 
-        <Button Grid.Row="3" 
+        <Button Grid.Row="1" 
                 Grid.Column="2"
                 FontSize="Medium"
                 CornerRadius="30"

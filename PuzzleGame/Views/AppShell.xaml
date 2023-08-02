@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="PuzzleGame.Views.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:ff="clr-namespace:FFImageLoading.Maui;assembly=FFImageLoading.Compat.Maui"
+    xmlns:transform="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Compat.Transformations"
+    xmlns:svg="clr-namespace:FFImageLoading.Svg.Maui;assembly=FFImageLoading.Compat.Svg.Maui"
+    xmlns:local="clr-namespace:PuzzleGame.Views"
+    Shell.FlyoutBehavior="Flyout">
+
+    <Shell.FlyoutHeader>
+        <Grid ColumnDefinitions="Auto, *" Padding="25" ColumnSpacing="20" BackgroundColor="#f2f8f2">
+            <Image Grid.Column="0" Source="heart.svg"
+                    Aspect="AspectFill" HeightRequest="50" WidthRequest="50"/>
+
+            <Label Grid.Column="1"
+                    Text="Desafio Numérico"
+                    VerticalTextAlignment="Center"
+                    FontSize="Title"
+                    FontAttributes="Bold"
+                    TextColor="#333333"/>
+        </Grid>
+    </Shell.FlyoutHeader>
+
+    <ShellContent
+            Title="Início"
+            Icon="house.png"
+            ContentTemplate="{DataTemplate local:PuzzleGamePage}"
+            Route="PuzzleGamePage" />
+    
+    <ShellContent
+        Title="Menu 2"
+        Icon="dotnet_bot.png"
+        Route="MainPage1" />
+    
+    <ShellContent
+        Icon="dotnet_bot.png"
+        Title="Menu 3"
+        Route="MainPage2" />
+
+    <Shell.FlyoutFooter>
+        <StackLayout Padding="0, 10" HorizontalOptions="FillAndExpand" BackgroundColor="#f2f8f2">
+            <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+                <Label Text="Feito com " HorizontalOptions="Center" />
+                <Image Source="heart.svg" HeightRequest="10" />
+                <Label Text=" por " HorizontalOptions="Center" />
+                <Label Text="Fernando Bráulio" HorizontalOptions="Center" TextColor="Blue">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnClickCreateBy" CommandParameter="https://www.linkedin.com/in/fernando-braulio/" />
+                    </Label.GestureRecognizers>
+                </Label>
+                <Label Text=" | v1.0.1 " HorizontalOptions="Center" />
+            </StackLayout>
+        </StackLayout>
+    </Shell.FlyoutFooter>
+</Shell>

@@ -376,12 +376,12 @@ namespace PuzzleGame.Views
 
         private void UpdateLabelNivel()
         {
-            levelLabel.Text = $"Nível: {App.PuzzleState.CurrentLevel}";
+            levelLabel.Text = $"Level: {App.PuzzleState.CurrentLevel}";
         }
 
         private void UpdateLabelMovesLimit()
         {
-            movesLimit.Text = $"Limite de Movimentos: {App.PuzzleState.MovesLimit}";
+            movesLimit.Text = $"Movimentos máx: {App.PuzzleState.MovesLimit}";
         }
 
         void TesteClick(Object sender, EventArgs e)
@@ -436,6 +436,7 @@ namespace PuzzleGame.Views
             }
             ShuffleList(numbers);
 
+            puzzleBoard = new int[App.PuzzleState.GridSize, App.PuzzleState.GridSize];
             int index = 0;
             for (int i = 0; i < App.PuzzleState.GridSize; i++)
             {
@@ -446,5 +447,10 @@ namespace PuzzleGame.Views
                 }
             }
         }
+
+        //private async void OnMenuClicked(Object sender, EventArgs e)
+        //{
+        //    await Navigation.PushModalAsync(new MenuPage());
+        //}
     }
 }
